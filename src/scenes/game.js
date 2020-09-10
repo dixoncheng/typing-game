@@ -19,29 +19,26 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    const { width, height } = this.game.config;
+    const { width: gameWidth, height: gameHeight } = this.game.config;
+
     // bg
-    this.add.image(width / 2, height / 2, 'sky').setScale(2);
+    this.add.image(gameWidth / 2, gameHeight / 2, 'sky').setScale(2);
 
-    this.monsters = this.physics.add.group({
-      // key: 'monsters',
-      // repeat: 11,
-      // setXY: { x: 12, y: 0, stepX: 70 }
-    });
+    this.monsters = this.add.group();
+    const monster = new Monster(
+      this,
+      100,
+      100,
+      'test',
+      'bulbasaur',
+      Phaser.Math.Between(30, 100)
+    );
 
-    // this.add.image(width / 2, height / 2, 'test');
-
-    // let monster = this.monsters.create(100, 100, 'test');
-    this.add.existing(new Monster(this, 100, 100, 'test'));
-
-    // monster.setCollideWorldBounds(true);
-    // monster.setVelocity(0, Phaser.Math.Between(0, 100));
+    this.monsters.add(monster, true);
 
     // create monster class
     // appear
     // typing bubble appear
-
-    //
   }
 
   update() {}

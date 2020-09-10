@@ -12,10 +12,10 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create() {
-    const { width, height } = this.game.config;
+    const { gameWidth, gameHeight } = this.game.config;
 
     // bg
-    this.add.image(width / 2, height / 2, 'sky').setScale(2);
+    this.add.image(gameWidth / 2, gameHeight / 2, 'sky').setScale(2);
 
     // logo
     this.add.text(160, 100, 'LOGO', { fill: '#000' });
