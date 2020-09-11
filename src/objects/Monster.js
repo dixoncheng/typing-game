@@ -11,13 +11,10 @@ export default class Monster extends Phaser.GameObjects.Container {
     this.add([image]);
 
     // text
-    // const text = new Phaser.GameObjects.Text(scene, 0, 36, name.toUpperCase(), {
-    //   fill: 'white'
-    // });
     const text = new Phaser.GameObjects.DynamicBitmapText(
       scene,
       0,
-      36,
+      48,
       'carrier_command',
       name,
       18
@@ -40,8 +37,5 @@ export default class Monster extends Phaser.GameObjects.Container {
     // movement
     scene.physics.world.enable(this);
     // this.body.setVelocity(0, velocity);
-
-    // typing
-    // scene.events.on('typing', this.typing, this);
   }
 }
