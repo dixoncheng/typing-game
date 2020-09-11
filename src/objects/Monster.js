@@ -5,19 +5,17 @@ export default class Monster extends Phaser.GameObjects.Container {
     this.correctCount = 0;
 
     // image
-    const image = new Phaser.GameObjects.Image(scene, 0, 0, texture).setScale(
-      1.5
-    );
+    const image = new Phaser.GameObjects.Image(scene, 0, 0, texture);
     this.add([image]);
 
     // text
     const text = new Phaser.GameObjects.DynamicBitmapText(
       scene,
       0,
-      48,
+      38,
       'carrier_command',
       name,
-      18
+      14
     )
       .setOrigin(0.5, 0)
       .setDisplayCallback((conf) => {
@@ -36,6 +34,6 @@ export default class Monster extends Phaser.GameObjects.Container {
 
     // movement
     scene.physics.world.enable(this);
-    // this.body.setVelocity(0, velocity);
+    this.body.setVelocity(0, velocity);
   }
 }

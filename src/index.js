@@ -6,8 +6,8 @@ import gameover from './scenes/gameover';
 const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: 375,
-  height: 812,
+  width: 800,
+  height: 600,
   physics: {
     default: 'arcade',
     arcade: {
