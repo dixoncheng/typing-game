@@ -1,11 +1,14 @@
 import Phaser from 'phaser';
 
 export default class GameOverScene extends Phaser.Scene {
+  numCorrect: number;
+  numAll: number;
+
   constructor() {
     super('gameover');
   }
 
-  init(data) {
+  init(data: any) {
     this.numCorrect = data.numCorrect;
     this.numAll = data.numAll;
   }
@@ -16,8 +19,8 @@ export default class GameOverScene extends Phaser.Scene {
     this.add.existing(
       new Phaser.GameObjects.DynamicBitmapText(
         this,
-        width / 2,
-        height / 2,
+        Number(width) / 2,
+        Number(height) / 2,
         'carrier_command',
         // `Game over\n\nYou got ${this.numCorrect}/${this.numAll}!`,
         `Game over\n\nScore: ${this.numCorrect}`,
@@ -30,7 +33,7 @@ export default class GameOverScene extends Phaser.Scene {
     this.input.once('pointerdown', this.keyPress, this);
   }
 
-  keyPress(event) {
+  keyPress(event: Phaser.Input.Keyboard.Key | Phaser.Input.Pointer) {
     this.scene.start('game');
   }
 }

@@ -1,21 +1,25 @@
 import Phaser from 'phaser';
-import skyImg from '../assets/sky.png';
-import StartButton from '../objects/StartButton';
+// import skyImg from 'assets/sky.png';
+import StartButton from 'objects/StartButton';
 
 export default class MenuScene extends Phaser.Scene {
+  startButton: StartButton;
+
   constructor() {
     super('menu');
   }
 
   preload() {
-    this.load.image('sky', skyImg);
+    // this.load.image('sky', skyImg);
   }
 
   create() {
-    const { gameWidth, gameHeight } = this.game.config;
+    const { width: gameWidth, height: gameHeight } = this.game.config;
 
     // bg
-    this.add.image(gameWidth / 2, gameHeight / 2, 'sky').setScale(2);
+    this.add
+      .image(Number(gameWidth) / 2, Number(gameHeight) / 2, 'sky')
+      .setScale(2);
 
     // logo
     this.add.text(160, 100, 'LOGO', { fill: '#000' });

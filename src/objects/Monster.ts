@@ -1,5 +1,15 @@
 export default class Monster extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, texture, name, velocity) {
+  correctCount: number;
+  body: Phaser.Physics.Arcade.Body;
+
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    texture: string,
+    name: string,
+    velocity: number
+  ) {
     super(scene, x, y);
     this.name = name;
     this.correctCount = 0;

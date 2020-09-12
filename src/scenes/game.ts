@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
-import Monster from '../objects/Monster';
-import Explosion from '../objects/Explosion';
-import explodeImg from '../assets/explode.png';
-import skyImg from '../assets/sky.png';
+import Monster from 'objects/Monster';
+import Explosion from 'objects/Explosion';
+import explodeImg from 'assets/explode.png';
+import skyImg from 'assets/sky.png';
 
-import monstersList from '../data/list.json';
+import monstersList from 'data/list.json';
 
 const monsterMaxWidth = 125;
 const monsterSize = 80;
@@ -29,15 +29,23 @@ const imagePath =
   'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/';
 
 export default class GameScene extends Phaser.Scene {
+  monstersList: Array<{ name: string; texture: string }>;
+  monsterIndex: number;
+  currentMonster: any; //todo custom Monster class
+  numCorrect: number;
+  monsters: Phaser.GameObjects.Group;
+
   constructor() {
     super('game');
 
     // todo get random X number of monsters
-    this.monstersList = monstersList.results.map(({ name, url }) => {
-      const trimmed = url.slice(0, -1);
-      const id = trimmed.substr(trimmed.lastIndexOf('/') + 1);
-      return { name, texture: id };
-    });
+    this.monstersList = monstersList.results.map(
+      ({ name, url }: { name: string; url: string }) => {
+        const trimmed = url.slice(0, -1);
+        const id = trimmed.substr(trimmed.lastIndexOf('/') + 1);
+        return { name, texture: id };
+      }
+    );
   }
 
   preload() {
@@ -75,7 +83,9 @@ export default class GameScene extends Phaser.Scene {
     const { width: gameWidth, height: gameHeight } = this.game.config;
 
     // bg
-    this.add.image(gameWidth / 2, gameHeight / 2, 'sky').setScale(2);
+    this.add
+      .image(Number(gameWidth) / 2, Number(gameHeight) / 2, 'sky')
+      .setScale(2);
 
     // monsters
     this.monsters = this.add.group();
@@ -93,7 +103,7 @@ export default class GameScene extends Phaser.Scene {
     // explosion
     this.anims.create({
       key: 'explode',
-      frames: 'explosion',
+      frames: this.anims.generateFrameNames('explosion'),
       frameRate: 10,
       repeat: 0,
       hideOnComplete: true
@@ -108,7 +118,7 @@ export default class GameScene extends Phaser.Scene {
     const { name, texture } = this.monstersList[this.monsterIndex];
     const monster = new Monster(
       this,
-      Phaser.Math.Between(monsterMaxWidth, gameWidth - monsterMaxWidth),
+      Phaser.Math.Between(monsterMaxWidth, Number(gameWidth) - monsterMaxWidth),
       // Phaser.Math.Between(35, 400),
       -monsterMaxWidth,
       `monster${texture}`,
@@ -119,7 +129,7 @@ export default class GameScene extends Phaser.Scene {
     this.monsterIndex += 1;
   }
 
-  keyPress(event) {
+  keyPress(event: Phaser.Input.Keyboard.Key) {
     // if currently typing a monster, must continue
     if (this.currentMonster) {
       // const monster = this.monsters.children.entries[0]; //TEMP
@@ -142,7 +152,7 @@ export default class GameScene extends Phaser.Scene {
       }
     } else {
       // find which monster can be started
-      this.monsters.children.iterate((monster) => {
+      this.monsters.children.iterate((monster: Monster) => {
         if (monster.name.charCodeAt(0) === event.keyCode) {
           this.currentMonster = monster;
           this.currentMonster.correctCount += 1;
@@ -154,13 +164,13 @@ export default class GameScene extends Phaser.Scene {
 
   update() {
     // remove monster from group if it dropped out of view
-    this.monsters.children.iterate((monster) => {
+    this.monsters.children.iterate((monster: Monster) => {
       if (monster) {
         if (monster.y > this.game.config.height) {
           if (this.currentMonster === monster) {
             this.currentMonster = null;
           }
-          if (monster.y > this.game.config.height + monsterSize / 2) {
+          if (monster.y > Number(this.game.config.height) + monsterSize / 2) {
             this.monsters.remove(monster, true, true);
           }
         }

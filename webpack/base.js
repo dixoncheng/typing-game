@@ -10,7 +10,8 @@ module.exports = {
     main: path.resolve('./src/index.ts')
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    modules: [path.resolve('./node_modules'), path.resolve('./src')]
   },
   module: {
     rules: [
