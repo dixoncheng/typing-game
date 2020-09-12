@@ -8,9 +8,20 @@ import monstersList from '../data/list.json';
 
 const monsterMaxWidth = 125;
 const monsterSize = 80;
-const spawnSpeed = 3000;
-const dropSpeedMin = 30;
-const dropSpeedMax = 50;
+const mode = 'hard';
+
+const modes = {
+  easy: {
+    spawnSpeed: 5000,
+    dropSpeedMin: 30,
+    dropSpeedMax: 50
+  },
+  hard: {
+    spawnSpeed: 1000,
+    dropSpeedMin: 100,
+    dropSpeedMax: 150
+  }
+};
 
 const imagePath =
   // 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/';
@@ -27,12 +38,6 @@ export default class GameScene extends Phaser.Scene {
       const id = trimmed.substr(trimmed.lastIndexOf('/') + 1);
       return { name, texture: id };
     });
-    // console.log(this.monstersList);
-
-    // randomise
-    this.monstersList = this.monstersList.sort(() => Math.random() - 0.5);
-    this.monsterIndex = 0;
-    this.currentMonster = null;
   }
 
   preload() {
@@ -53,7 +58,20 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
+  // init(data) {
+  //   this.restart = data.restart;
+  // }
+
   create() {
+    // console.log(this.monstersList);
+
+    // randomise
+    this.monstersList = this.monstersList.sort(() => Math.random() - 0.5);
+
+    this.monsterIndex = 0;
+    this.currentMonster = null;
+    this.numCorrect = 0;
+
     const { width: gameWidth, height: gameHeight } = this.game.config;
 
     // bg
@@ -61,16 +79,9 @@ export default class GameScene extends Phaser.Scene {
 
     // monsters
     this.monsters = this.add.group();
-
-    // this.createMonster();
-    // this.monsterIndex += 1;
-    // this.createMonster();
-    // this.monsterIndex += 1;
-    // this.createMonster();
-
     this.createMonster();
     this.time.addEvent({
-      delay: spawnSpeed,
+      delay: modes[mode].spawnSpeed,
       loop: true,
       callback: () => {
         if (this.monsterIndex < this.monstersList.length) {
@@ -102,7 +113,7 @@ export default class GameScene extends Phaser.Scene {
       -monsterMaxWidth,
       `monster${texture}`,
       name.toUpperCase(),
-      Phaser.Math.Between(dropSpeedMin, dropSpeedMax)
+      Phaser.Math.Between(modes[mode].dropSpeedMin, modes[mode].dropSpeedMax)
     );
     this.monsters.add(monster, true);
     this.monsterIndex += 1;
@@ -126,6 +137,7 @@ export default class GameScene extends Phaser.Scene {
             'explosion'
           );
           this.currentMonster = null;
+          this.numCorrect += 1;
         }
       }
     } else {
@@ -144,17 +156,24 @@ export default class GameScene extends Phaser.Scene {
     // remove monster from group if it dropped out of view
     this.monsters.children.iterate((monster) => {
       if (monster) {
-        if (monster.y > this.game.config.height + monsterSize / 2) {
-          this.monsters.remove(monster, true, true);
+        if (monster.y > this.game.config.height) {
           if (this.currentMonster === monster) {
             this.currentMonster = null;
+          }
+          if (monster.y > this.game.config.height + monsterSize / 2) {
+            this.monsters.remove(monster, true, true);
           }
         }
       }
     });
 
-    // if group is empty
-    // show end screen
-    // Finished! You've got 20/20
+    // if no more monsters to show, show game over screen
+    if (this.monsters.getLength() < 1) {
+      this.scene.pause();
+      this.scene.launch('gameover', {
+        numCorrect: this.numCorrect,
+        numAll: this.monstersList.length
+      });
+    }
   }
 }
