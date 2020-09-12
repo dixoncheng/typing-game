@@ -3,7 +3,7 @@ import menu from './scenes/menu';
 import game from './scenes/game';
 import gameover from './scenes/gameover';
 
-const config = {
+const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
   width: 800,
