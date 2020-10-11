@@ -1,5 +1,5 @@
-language: ruby
-
+language: generic
+sudo: required
 services:
   - docker
 
