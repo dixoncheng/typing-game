@@ -1,0 +1,16 @@
+sudo: required
+services:
+  - docker
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'ap-southeast-2'
+  app: 'Typing game'
+  env: 'TypingGame-env'
+  bucker_name: 'elasticbeanstalk-ap-southeast-2-939458141866'
+  bucket_path: 'Typing game'
+  on:
+    branch: release
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key:
+      secure: '$AWS_SECRET_KEY'
