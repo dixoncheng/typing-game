@@ -8,13 +8,18 @@ import monstersList from 'data/list.json';
 
 const monsterMaxWidth = 125;
 const monsterSize = 80;
-const mode = 'hard';
+const mode = 'advanced';
 
 const modes = {
   easy: {
     spawnSpeed: 5000,
     dropSpeedMin: 30,
     dropSpeedMax: 50
+  },
+  advanced: {
+    spawnSpeed: 2000,
+    dropSpeedMin: 70,
+    dropSpeedMax: 90
   },
   hard: {
     spawnSpeed: 1000,
@@ -31,7 +36,7 @@ const imagePath =
 export default class GameScene extends Phaser.Scene {
   monstersList: Array<{ name: string; texture: string }>;
   monsterIndex: number;
-  currentMonster: any; //todo custom Monster class
+  currentMonster: Monster;
   numCorrect: number;
   monsters: Phaser.GameObjects.Group;
 
@@ -66,13 +71,7 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  // init(data) {
-  //   this.restart = data.restart;
-  // }
-
   create() {
-    // console.log(this.monstersList);
-
     // randomise
     this.monstersList = this.monstersList.sort(() => Math.random() - 0.5);
 
@@ -132,13 +131,11 @@ export default class GameScene extends Phaser.Scene {
   keyPress(event: Phaser.Input.Keyboard.Key) {
     // if currently typing a monster, must continue
     if (this.currentMonster) {
-      // const monster = this.monsters.children.entries[0]; //TEMP
       const { name, correctCount } = this.currentMonster;
       if (name.charCodeAt(correctCount) === event.keyCode) {
         this.currentMonster.correctCount += 1;
         if (this.currentMonster.correctCount >= name.length) {
           // word is finished
-          // this.monsters.killAndHide(this.currentMonster);
           this.monsters.remove(this.currentMonster, true, true);
           new Explosion(
             this,
